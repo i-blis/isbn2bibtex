@@ -14,12 +14,13 @@ get '/' do
   haml :index
 end
 
-# post '/' do
-# end
+post "*" do
+  redirect "/#{params[:choice]}/#{params[:isbn]}"
+end
 
 get '/:action/:isbn' do
   pass unless %r{(\b\d{9}[\w|\d]\b)+}.match(params[:isbn])
-  pass unless params[:action] == 'view' || 'get'
+  pass unless params[:action] == 'view' || 'download'
   @books = []
   params[:isbn].split("\s").each do |isbn|
     book = Amazon::Book.new(isbn)
@@ -29,9 +30,9 @@ get '/:action/:isbn' do
   case params[:action]
     when 'view'
       haml :htmlbib
-    when 'get'
+    when 'download'
       content_type 'application/text', :charset => 'utf-8'
-      haml :textbib, layout => false
+      haml :textbib, :layout => false
     else
       redirect '/'
   end

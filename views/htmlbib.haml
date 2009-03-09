@@ -1,7 +1,7 @@
 - @books.each do |book|
-  #output
-    #head= '@book{'+ book.isbn + ','
+  .output
+    .head= '@book{'+ book.isbn + ','
     - %w(author editor title year publisher cover date isbn description).each do |field|
       - next unless book.fields.include?(field)
-      #body= field + " = {" + book.send(field) + "},"
-    #head }
+      .body= field + " = {" + book.send(field) + "},"
+    .head }

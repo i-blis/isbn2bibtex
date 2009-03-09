@@ -6,7 +6,19 @@
   %body
     #container
       #header
-        / %a{ :href => '/fuq' } fuq
-      #search
-        
+        %a{ :href => '/about' } about
+      %form{ :method => "post", :action => "/" }
+        #search
+          %input{ :type => "text", :name => "isbn", :size => 66}
+          %input{ :type => "submit", :value => "Look up"}
+          %select{ :name => "choice" }
+            %option view 
+            %option download
+          / %br
+          / %table#options
+          /   %tr
+          /     %td 
+          /       give me the BibTeX file right away to download
+          /     %td 
+          /       %input{ :type => "checkbox", :id => "download", :checked => true }          
       = yield
