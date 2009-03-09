@@ -8,17 +8,6 @@ require 'amazon/ecs'
 require 'amazon/book'
 
 
-template = <<'END_TEMPLATE'
-@book{<%= isbn %>,<br>
-% %w(author editor title year publisher cover date isbn description).each do |var|
-%   unless (eval var).empty? then 
-<%= "\s\s#{var} = {#{eval var}}," %><br>
-%   end
-% end
-}
-END_TEMPLATE
-
-
 set :port, 8080
 
 get '/' do
@@ -28,47 +17,36 @@ end
 # post '/' do
 # end
 
-get '/hello' do
-  @time = "Hello world, it's #{Time.now} at the server!"  
-  haml :hello
+get '/:action/:isbn' do
+  pass unless %r{(\b\d{9}[\w|\d]\b)+}.match(params[:isbn])
+  pass unless params[:action] == 'view' || 'get'
+  @books = []
+  params[:isbn].split("\s").each do |isbn|
+    book = Amazon::Book.new(isbn)
+    next unless book.defined?
+    @books << book
+  end
+  case params[:action]
+    when 'view'
+      haml :htmlbib
+    when 'get'
+      content_type 'application/text', :charset => 'utf-8'
+      haml :textbib, layout => false
+    else
+      redirect '/'
+  end
 end
 
-get %r{/\b(\d{9}[\w|\d])\b/view} do
-  book = Amazon::Book.new(params[:captures].first)
-  @bibtex = book.populate(template) 
-  haml :htmlbib
-end
-
-
-get %r{/\b(\d{9}[\w|\d])\b} do
-  book = Amazon::Book.new(params[:captures].first)
-  @bibtex = book.populate(template).gsub(%r{</?[^>]+?>}, '')
-  content_type 'application/text', :charset => 'utf-8'
+# get %r{/(\b\d{9}[\w|\d]\b)+} do
+#   redirect '/get/' + params[:captures].first
+# end
   
-  haml :bibtex, layout => false
+get '/public/styles/main.css' do
+  content_type 'text/css', :charset => 'utf-8'
+  sass :main
 end
 
-use_in_file_templates!
+get "/*" do
+  redirect '/'
+end
 
-__END__
-
-@@ layout
-%html
-  %head
-    %title Get BibTeX record from ISBN number
-  %body
-    #container
-      = yield
-
-@@ index
-%p= @time
-
-@@ hello
-%p= @time
-
-@@ htmlbib
-%div{ :style => 'width: 600px; font-family: monospace'}
-  %p= @bibtex
-
-@@ bibtex
-=@bibtex

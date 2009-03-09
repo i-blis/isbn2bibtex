@@ -1,0 +1,7 @@
+- @books.each do |book|
+  = '@book{'+ book.isbn + ",\n"
+  - %w(author editor title year publisher cover date isbn description).each do |field|
+    - next unless book.fields.include?(field)
+    - content = book.send(field).gsub(%r{</?[^>]+?>}, '').gsub(/\s{2,}/, ' ')
+    = "\s\s" + field + " = {" + content + "},\n"
+  = "}\n"
