@@ -39,9 +39,9 @@ get '/:action/:isbn' do
   end
 end
 
-# get %r{/(\b\d{9}[\w|\d]\b)+} do
-#   redirect '/get/' + params[:captures].first
-# end
+get %r{/(\b(\d{9}[\w|\d])\b)+} do
+  redirect '/download/' + params[:captures].join(' ')
+end
     
 get '/styles/main.css' do
   content_type 'text/css', :charset => 'utf-8'
