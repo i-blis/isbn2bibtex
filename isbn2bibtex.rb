@@ -20,15 +20,16 @@ end
 
 get '/:action/:isbn' do
   pass unless %r{(\b\d{9}[\w|\d]\b)+}.match(params[:isbn])
-  pass unless params[:action] == 'view' || 'download'
+  pass unless params[:action] == 'preview' || 'download'
   @books = []
   params[:isbn].split("\s").each do |isbn|
     book = Amazon::Book.new(isbn)
     next unless book.defined?
     @books << book
   end
+  @isbn = params[:isbn]
   case params[:action]
-    when 'view'
+    when 'preview'
       haml :htmlbib
     when 'download'
       content_type 'application/text', :charset => 'utf-8'
@@ -41,11 +42,17 @@ end
 # get %r{/(\b\d{9}[\w|\d]\b)+} do
 #   redirect '/get/' + params[:captures].first
 # end
-  
+    
 get '/public/styles/main.css' do
   content_type 'text/css', :charset => 'utf-8'
   sass :main
 end
+
+get '/public/images/:image.:ext' do
+  filename = File.dirname(__FILE__) + "/public/images/#{params[:image]}.#{params[:ext]}"
+  send_file filename, :type => "image/#{params[:ext]}"  
+end
+
 
 get "/*" do
   redirect '/'
