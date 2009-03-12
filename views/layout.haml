@@ -2,19 +2,19 @@
 %html
   %head  
     %meta{'http-equiv' => "Content-Type", :content => "text/html; charset=utf-8"}/
-    %link{:rel => 'stylesheet', :href => '/public/styles/main.css', :type => 'text/css'}
+    %link{:rel => 'stylesheet', :href => '/styles/main.css', :type => 'text/css'}
     %title isbn2bibtex :: Fetch BibTeX record from ISBN number
   %body
     #container
       #header
         %a{ :href => '/help' } help
       #search
-        %a
-          %img{ :src => "/public/images/logo.1.gif", :alt => "logo"  }
-        %form{ :method => "post", :action => "/" }
-          %input{ :type => "text", :name => "isbn", :size => 66}
+        %a{ :href => '/' }
+          %img{ :src => "/images/logo.gif", :alt => "logo"  }
+        %form{ :method => "post", :name => "search" }
+          %input{ :type => "text", :name => "isbn", :size => 66, :value => @isbn }
           %input{ :type => "submit", :value => "Look up"}
-          %select{ :name => "choice", :type => "submit" }
+          %select{ :name => "choice", :onchange => "this.form.submit()" }
             %option preview 
             %option download
           / %br

@@ -43,13 +43,13 @@ end
 #   redirect '/get/' + params[:captures].first
 # end
     
-get '/public/styles/main.css' do
+get '/styles/main.css' do
   content_type 'text/css', :charset => 'utf-8'
   sass :main
 end
 
-get '/public/images/:image.:ext' do
-  filename = File.dirname(__FILE__) + "/public/images/#{params[:image]}.#{params[:ext]}"
+get '/images/:image.:ext' do
+  filename = File.dirname(__FILE__) + "/images/#{params[:image]}.#{params[:ext]}"
   send_file filename, :type => "image/#{params[:ext]}"  
 end
 
