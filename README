@@ -1,0 +1,7 @@
+A tiny webapp to produce BibTeX records from ISBN-10 book identifiers
+
+  - Grabs the data from amazon.us.
+
+  - The amazon/book module is still experimental. Will be released soon.
+  
+  - The webapp is merely a first experiment with the Sinatra framework.
